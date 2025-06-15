@@ -1,33 +1,42 @@
 import random
 
+WHITE_BG = "\033[47m"  # White background
+BLACK_BG = "\033[100m" # Dark gray background
+RESET = "\033[0m"      # Reset color
+
 # Creates the chess board and randomly place the queen in each column
 def createBoard(n):
-    board = [0] * n 
+    board = ['.'] * n 
     for i in range(n):
-        board[i] = [0] * n #all rows initialised to zero
+        board[i] = ['.'] * n #all rows initialised to dots
     for i in range(n):
         rand = random.randint(0, 7)
-        board[rand][i] = 1 #queen sits in random row of column i
+        board[rand][i] = 'Q' #queen sits in random row of column i
     return board
 
 #function to print the board 
 def printBoard(board):
-    print('\n')
-    for i in range(len(board)): #loop to print the rows
-        print(board[i], end="\n")
+    for i, row in enumerate(board):
+        line = ""
+        for j, cell in enumerate(row):
+            bg = WHITE_BG if (i + j) % 2 == 0 else BLACK_BG
+            content = f" {cell} "
+            line += bg + content + RESET
+        print(line)
+    print()
 
 #initialise all column values to 0 and then place 1 where the heuristic value (attack) is minimum 
 def changeState(board, min_index, col):
     for row in range(len(board)):
         board[row][col] = 0
-    board[min_index][col] = 1
+    board[min_index][col] = 'Q'
 
 
 def boardToState(board):
     state = [-1] * noOfQueens
     for col in range(noOfQueens): # each column
         for row in range(noOfQueens): # each row
-            if board[row][col] == 1: # condition when queen is there
+            if board[row][col] == 'Q': # condition when queen is there
                 state[col] = row
                 break
     return state
@@ -103,9 +112,9 @@ def random_restart_hill_climb():
 
 # display board from state
 def displayStateAsBoard(state):
-    board = [[0 for _ in range(noOfQueens)] for _ in range(noOfQueens)]
+    board = [["." for _ in range(noOfQueens)] for _ in range(noOfQueens)]
     for col in range(noOfQueens):
-        board[state[col]][col] = 1
+        board[state[col]][col] = 'Q'
     printBoard(board)
 
 # run the algorithm
