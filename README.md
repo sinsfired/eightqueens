@@ -4,7 +4,6 @@ This is my first GitHub repo about eight queens game
 8 queens problem using Basic Hill Climbing and Random restart hill climbing
 
 Objective: Implement and analyze Basic Hill Climbing and Random restart hill climbing to solve 8 queens problem. Goal is to find a pattern such that no two of the eight queens threaten each other.
-
 Algorithms:
 1.	Basic Hill Climbing
 Place one queen in each column randomly

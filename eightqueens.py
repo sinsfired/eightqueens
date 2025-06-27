@@ -6,9 +6,9 @@ RESET = "\033[0m"      # Reset color
 
 # Creates the chess board and randomly place the queen in each column
 def createBoard(n):
-    board = ['.'] * n 
+    board = [' '] * n 
     for i in range(n):
-        board[i] = ['.'] * n #all rows initialised to dots
+        board[i] = [' '] * n #all rows initialised to dots
     for i in range(n):
         rand = random.randint(0, 7)
         board[rand][i] = 'Q' #queen sits in random row of column i
@@ -28,7 +28,7 @@ def printBoard(board):
 #initialise all column values to 0 and then place 1 where the heuristic value (attack) is minimum 
 def changeState(board, min_index, col):
     for row in range(len(board)):
-        board[row][col] = 0
+        board[row][col] = ' '
     board[min_index][col] = 'Q'
 
 
@@ -81,19 +81,24 @@ def hill_climb(initial_state):
     current = initial_state
     current_h = heuristic(current)
     steps = 0
+    heuristics = [current_h]
+
     print("Initial State:")
     displayStateAsBoard(current)
     print(f"Heuristic: {current_h}\n")
+    
     while True:
         neighbor, neighbor_h = get_best_neighbor(current)
         if neighbor_h >= current_h: #no improvement then stop
-            print("Local minimum reached.\n")
+            print("Local minimum reached.")
             break
         current = neighbor
         current_h = neighbor_h
         steps += 1
+        heuristics.append(current_h)#track each heuristic
         print(f"Step {steps}: Heuristic = {current_h}")
         displayStateAsBoard(current)
+    print("Heuristic trend during this run:",heuristics)
     return current, current_h, steps
 
 # random restart hill climbing
@@ -101,7 +106,9 @@ def random_restart_hill_climb():
     total_steps = 0
     restarts = 0
     while True:
-        print(f"Restart #{restarts + 1}")
+        import os
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(f"\nRestart #{restarts + 1}")
         initial_state = [random.randint(0, noOfQueens - 1) for _ in range(noOfQueens)]
         solution, h, steps = hill_climb(initial_state)
         total_steps += steps
@@ -112,7 +119,7 @@ def random_restart_hill_climb():
 
 # display board from state
 def displayStateAsBoard(state):
-    board = [["." for _ in range(noOfQueens)] for _ in range(noOfQueens)]
+    board = [[" " for _ in range(noOfQueens)] for _ in range(noOfQueens)]
     for col in range(noOfQueens):
         board[state[col]][col] = 'Q'
     printBoard(board)
@@ -120,7 +127,7 @@ def displayStateAsBoard(state):
 # run the algorithm
 noOfQueens = 8
 solution, restarts, total_steps = random_restart_hill_climb()
-print("Solution Found:")
+print("\nSolution Found!\n")
 displayStateAsBoard(solution)
 print(f"Restarts: {restarts}")
 print(f"Total Steps (incl. restarts): {total_steps}")
